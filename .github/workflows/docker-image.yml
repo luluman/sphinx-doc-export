@@ -12,13 +12,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Log in to Docker Hub
-      uses: docker/login-action@master
+    -
+      name: Checkout
+      uses: actions/checkout@v2
+    -
+      name: Log in to Docker Hub
+      uses: docker/login-action@v1
       with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
-    - name: Build the latest Docker image
-      run: docker build . --file Dockerfile --tag mattlu/sphinx-doc-export:latest
-    - name: Push the latest Docker image
-      run: docker push mattlu/sphinx-doc-export:latest
+
+    -
+      name: Build and push
+      uses: docker/build-push-action@v2
+      with:
+         context: .
+         push: true
+         tags: mattlu/sphinx-doc-export:latest
